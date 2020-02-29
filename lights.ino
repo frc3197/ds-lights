@@ -1,6 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 
-#define NUM 149
+#define NUM 148
 #define PIN 8
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUM, PIN, NEO_GRB + NEO_KHZ800);
@@ -22,7 +22,6 @@ void setup() {
   for (int i = 0; i < NUM; i++) {
     rainbowArr[i] = Wheel((int) ((i * 255.0f) / NUM));
     float a = (sin(TWO_PI * i * 6 / NUM) + 1) * 0.5;
-//    chaserArr[i] = pixels.Color(255 * a, 48 * a, 0);
     chaserArr[i] = pixels.Color(10 * a, 10 * a, 255 * a);
     randomArr[i] = pixels.Color(255 * a, 10 * a, 10 * a);
   }
@@ -31,7 +30,7 @@ void setup() {
   
   rainbowDelay = 10;
 
-mode = 2;
+mode = 0;
 
 }
 
@@ -48,30 +47,23 @@ void loop() {
   }
   
   switch(mode){
-//    case 0:
-//     setColor(pixels.Color(255,0,0));
-//    break;
-//     case 1:
-//    setColor(pixels.Color(0,0,255));
-//    break;
+    case 0:
+      setColor(pixels.Color(255,0,0));
+      break;
+    case 1:
+      setColor(pixels.Color(0,0,255));
+      break;
     case 2:
-    rainbow();
-    break;
-//    case 3:
-//    //CHASE
-//    for (int i = 0; i < NUM; i++) {
-//      pixels.setPixelColor(i, chaserArr[(i + rainbowCounter) % NUM]);
-//    }
-//      rainbowCounter=(rainbowCounter + 1) % NUM;
-//  delay(rainbowDelay);
-//    break;
-//    case 4:
-//     for (int i = 0; i < NUM; i++) {
-//      pixels.setPixelColor(i, randomArr[(i + rainbowCounter) % NUM]);
-//    }
-//      rainbowCounter=(rainbowCounter + 1) % NUM;
-//  delay(rainbowDelay);
-//  break;
+      rainbow();
+      break;
+    case 3:
+      //CHASE
+      for (int i = 0; i < NUM; i++) {
+        pixels.setPixelColor(i, chaserArr[(i + rainbowCounter) % NUM]);
+      }
+      rainbowCounter=(rainbowCounter + 1) % NUM;
+      delay(rainbowDelay);
+      break;
   }
   pixels.show();
 }
@@ -79,7 +71,7 @@ void loop() {
 
 
 void setColor(uint32_t color){
-    for (int i = 0; i < NUM; i++) {
+  for (int i = 0; i < NUM; i++) {
     pixels.setPixelColor(i, color);
   }
 }
