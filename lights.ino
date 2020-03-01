@@ -26,24 +26,20 @@ void setup() {
     randomArr[i] = pixels.Color(255 * a, 10 * a, 10 * a);
   }
 
-  
-  
-  rainbowDelay = 10;
-
-mode = 0;
-
+  rainbowDelay = 100;
+  mode = 0;
 }
 
-bool previous = false;
+int changed = 0;
 void loop() {
-  
-  if(digitalRead(5) && false){
-    if(!previous){
-    previous = true;
-    mode = (mode + 1) % 4;
+  if(digitalRead(5)){
+    if (changed == 0) {
+      mode = (mode + 1) % 4;
+      changed = 1;
     }
-  } else {
-    previous = false;
+  } 
+  else {
+    changed = 0;
   }
   
   switch(mode){
@@ -67,8 +63,6 @@ void loop() {
   }
   pixels.show();
 }
-
-
 
 void setColor(uint32_t color){
   for (int i = 0; i < NUM; i++) {
