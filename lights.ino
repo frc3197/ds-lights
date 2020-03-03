@@ -56,27 +56,13 @@ void switchSetting() {
 }
 
 void showStrip() {
- #ifdef ADAFRUIT_NEOPIXEL_H
    // NeoPixel
    strip.show();
- #endif
- #ifndef ADAFRUIT_NEOPIXEL_H
-   // FastLED
-   FastLED.show();
- #endif
 }
 
 void setPixel(int Pixel, byte red, byte green, byte blue) {
- #ifdef ADAFRUIT_NEOPIXEL_H
    // NeoPixel
    strip.setPixelColor(Pixel, strip.Color(red, green, blue));
- #endif
- #ifndef ADAFRUIT_NEOPIXEL_H
-   // FastLED
-   leds[Pixel].r = red;
-   leds[Pixel].g = green;
-   leds[Pixel].b = blue;
- #endif
 }
 
 void setAll(byte red, byte green, byte blue) {
@@ -90,7 +76,6 @@ void MeteorRain(byte red, byte green, byte blue, byte meteorSize, byte meteorTra
   setAll(0,0,0);
  
   for(int i = 0; i < NUM_LEDS+NUM_LEDS; i++) {
-   
    
     // fade brightness all LEDs one step
     for(int j=0; j<NUM_LEDS; j++) {
@@ -138,6 +123,7 @@ void fadeToBlack(int ledNo, byte fadeValue) {
 void CylonBounce(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, int ReturnDelay){
 
   for(int i = 0; i < NUM_LEDS-EyeSize-2; i++) {
+    
     setAll(0,0,0);
     setPixel(i, red/10, green/10, blue/10);
     for(int j = 1; j <= EyeSize; j++) {
@@ -151,6 +137,7 @@ void CylonBounce(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, i
   delay(ReturnDelay);
 
   for(int i = NUM_LEDS-EyeSize-2; i > 0; i--) {
+    
     setAll(0,0,0);
     setPixel(i, red/10, green/10, blue/10);
     for(int j = 1; j <= EyeSize; j++) {
@@ -177,6 +164,7 @@ void NewKITT(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, int R
 
 void CenterToOutside(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, int ReturnDelay) {
   for(int i =((NUM_LEDS-EyeSize)/2); i>=0; i--) {
+
     setAll(0,0,0);
    
     setPixel(i, red/10, green/10, blue/10);
@@ -199,6 +187,7 @@ void CenterToOutside(byte red, byte green, byte blue, int EyeSize, int SpeedDela
 
 void OutsideToCenter(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, int ReturnDelay) {
   for(int i = 0; i<=((NUM_LEDS-EyeSize)/2); i++) {
+    
     setAll(0,0,0);
    
     setPixel(i, red/10, green/10, blue/10);
@@ -221,6 +210,7 @@ void OutsideToCenter(byte red, byte green, byte blue, int EyeSize, int SpeedDela
 
 void LeftToRight(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, int ReturnDelay) {
   for(int i = 0; i < NUM_LEDS-EyeSize-2; i++) {
+    
     setAll(0,0,0);
     setPixel(i, red/10, green/10, blue/10);
     for(int j = 1; j <= EyeSize; j++) {
@@ -235,6 +225,7 @@ void LeftToRight(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, i
 
 void RightToLeft(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, int ReturnDelay) {
   for(int i = NUM_LEDS-EyeSize-2; i > 0; i--) {
+    
     setAll(0,0,0);
     setPixel(i, red/10, green/10, blue/10);
     for(int j = 1; j <= EyeSize; j++) {
@@ -250,21 +241,21 @@ void RightToLeft(byte red, byte green, byte blue, int EyeSize, int SpeedDelay, i
 void RunningLights(byte red, byte green, byte blue, int WaveDelay) {
   int Position=0;
  
-  for(int j=0; j<NUM_LEDS*2; j++)
-  {
-      Position++; // = 0; //Position + Rate;
-      for(int i=0; i<NUM_LEDS; i++) {
-        // sine wave, 3 offset waves make a rainbow!
-        //float level = sin(i+Position) * 127 + 128;
-        //setPixel(i,level,0,0);
-        //float level = sin(i+Position) * 127 + 128;
-        setPixel(i,((sin(i+Position) * 127 + 128)/255)*red,
-                   ((sin(i+Position) * 127 + 128)/255)*green,
-                   ((sin(i+Position) * 127 + 128)/255)*blue);
-      }
+  for(int j=0; j<NUM_LEDS*2; j++) {
+    
+    Position++; // = 0; //Position + Rate;
+    for(int i=0; i<NUM_LEDS; i++) {
+      // sine wave, 3 offset waves make a rainbow!
+      //float level = sin(i+Position) * 127 + 128;
+      //setPixel(i,level,0,0);
+      //float level = sin(i+Position) * 127 + 128;
+      setPixel(i,((sin(i+Position) * 127 + 128)/255)*red,
+                 ((sin(i+Position) * 127 + 128)/255)*green,
+                 ((sin(i+Position) * 127 + 128)/255)*blue);
+    }
      
-      showStrip();
-      delay(WaveDelay);
+    showStrip();
+    delay(WaveDelay);
   }
 }
 
@@ -272,6 +263,10 @@ void TheaterChaseRainbow(int SpeedDelay) {
   byte *c;
  
   for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
+    if (digitalRead(5)) {
+      return;
+    }
+    
     for (int q=0; q < 3; q++) {
         for (int i=0; i < NUM_LEDS; i=i+3) {
           c = Wheel( (i+j) % 255);
@@ -331,7 +326,7 @@ void BouncingBalls(byte red, byte green, byte blue, int BallCount) {
     Dampening[i] = 0.90 - float(i)/pow(BallCount,2);
   }
 
-  while (true) {
+  while (!digitalRead(5)) {
     for (int i = 0 ; i < BallCount ; i++) {
       TimeSinceLastBounce[i] =  millis() - ClockTimeSinceLastBounce[i];
       Height[i] = 0.5 * Gravity * pow( TimeSinceLastBounce[i]/1000 , 2.0 ) + ImpactVelocity[i] * TimeSinceLastBounce[i]/1000;
